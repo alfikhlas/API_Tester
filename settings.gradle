@@ -1,0 +1,2 @@
+rootProject.name = "apiTester"
+include ':app'
