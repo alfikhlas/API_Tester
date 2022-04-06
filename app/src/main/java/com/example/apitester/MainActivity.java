@@ -1,19 +1,28 @@
 package com.example.apitester;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.w3c.dom.Text;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    String apiNames[], links[];
+    String[] urls;
+
+    List<apiClass> apis = new ArrayList<>();
 
     RecyclerView recyclerView;
 
@@ -25,25 +34,62 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recylerView);
 
-        apiNames = getResources().getStringArray(R.array.apiNames);
-        links = getResources().getStringArray(R.array.links);
+        urls = getResources().getStringArray(R.array.urls);
+        setApis();
 
-        viewAdapter viewAdapter = new viewAdapter(this, apiNames, links);
+        viewAdapter viewadapter = new viewAdapter(this, apis);
 
-        recyclerView.setAdapter(viewAdapter);
+        recyclerView.setAdapter(viewadapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                View x = recyclerView.getLayoutManager().findViewByPosition(0);
-            }
-        });
+        button.setOnClickListener(v -> setApiStatus(button, viewadapter));
     }
 
-    public void apiTest(){
+    @SuppressLint("DefaultLocale")
+    public void setApis(){
+        for (int i = 0; i < this.urls.length; i++){
+            apis.add(new apiClass(String.format("System %d", i+1), urls[i], "NONE"));
+        }
+    }
 
+    @SuppressLint("SetTextI18n")
+    public void setApiStatus(Button button, viewAdapter viewadapter){
+        for (int i = 0; i < this.urls.length; i++){
+            button.setText("Testing...");
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(apis.get(i).getUrl())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            jsonPlaceHolderApi apiCall = retrofit.create(jsonPlaceHolderApi.class);
+
+            Call<Void> call = apiCall.callApi(apis.get(i).getUrl());
+//            HttpUrlConnection
+            int finalI = i;
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                    if (!response.isSuccessful()) {
+                        apis.get(finalI).setStatus("DOWN");
+                        viewadapter.notifyItemChanged(finalI);
+                        button.setText("Done");
+                        return;
+                    }
+                    apis.get(finalI).setStatus("LIVE");
+                    viewadapter.notifyItemChanged(finalI);
+                    button.setText("Done");
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
+                    apis.get(finalI).setStatus("DOWN");
+                    viewadapter.notifyItemChanged(finalI);
+                    button.setText("Done");
+                }
+            });
+        }
     }
 
 }

@@ -12,27 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.List;
 
 public class viewAdapter extends RecyclerView.Adapter<viewAdapter.viewHolder> {
 
-    String data1[], data2[];
     Context context;
-    private RequestQueue queue;
+    List<apiClass> api;
 
-    public viewAdapter(Context ct, String apiNames[], String links[]){
+    public viewAdapter(Context ct, List<apiClass> apis){
         context = ct;
-        data1 = apiNames;
-        data2 = links;
+        api = apis;
     }
 
     @NonNull
@@ -45,21 +34,24 @@ public class viewAdapter extends RecyclerView.Adapter<viewAdapter.viewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull viewAdapter.viewHolder holder, int position) {
-        holder.myText1.setText(data1[position]);
-        holder.myText2.setText(data2[position]);
-        holder.text3 = holder.myText3;
-        text3.setText("NONE");
+        holder.myText1.setText(api.get(position).getName());
+        holder.myText2.setText(api.get(position).getUrl());
+        holder.myText3.setText(api.get(position).getStatus());
+        if (api.get(position).getStatus() == "LIVE"){
+            holder.myText3.setTextColor(Color.GREEN);
+        }else if (api.get(position).getStatus() == "DOWN"){
+            holder.myText3.setTextColor(Color.RED);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return data1.length;
+        return api.size();
     }
 
     public class viewHolder extends RecyclerView.ViewHolder{
 
-        TextView myText1, myText2;
-        TextView myText3;
+        TextView myText1, myText2, myText3;
         ConstraintLayout mainLayout;
 
         public viewHolder(@NonNull View itemView) {

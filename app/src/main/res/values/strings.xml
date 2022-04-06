@@ -2,30 +2,19 @@
     <string name="app_name">apiTester</string>
     <string name="testing">Testing</string>
     <string name="button">Button</string>
-    
-    <string-array name="apiNames">
-        <item>System 1</item>
-        <item>System 2</item>
-        <item>System 3</item>
-        <item>System 4</item>
-        <item>System 5</item>
-        <item>System 6</item>
-        <item>System 7</item>
-        <item>System 8</item>
-        <item>System 9</item>
-        <item>System 10</item>
-    </string-array>
 
-    <string-array name="links">
-        <item>https://catfact.ninja/fact</item>
-        <item>https://api.coindesk.com/v1/bpi/currentprice.json</item>
-        <item>https://www.boredapi.com/api/activity</item>
-        <item>https://api.agify.io?name=meelad</item>
-        <item>https://api.genderize.io?name=luc</item>
-        <item>https://api.nationalize.io?name=nathaniel</item>
-        <item>https://datausa.io/api/data?drilldowns=Nation&amp;measures=Population</item>
-        <item>https://dog.ceo/api/breeds/image/random</item>
-        <item>https://api.ipify.org?format=json</item>
-        <item>https://ipinfo.io/161.185.160.93/geo</item>
+
+    <string-array name="urls">
+        <item>https://catfact.ninja/fact/</item>
+        <item>https://api.coindesk.com/v1/bpi/currentprice.json/</item>
+        <item>https://www.boredapi.com/api/activity/</item>
+        <item>https://api.agify.io?name=meelad/</item>
+        <item>https://api.genderize.io?name=luc/</item>
+        <item>https://api.nationalize.io?name=nathaniel/</item>
+        <item>https://jsonplaceholder.typicode.com/posts/</item>
+<!--        <item>https://datausa.io/api/data?drilldowns=Nation&amp;measures=Population</item>-->
+        <item>https://jsonplaceholder.typicode.com/comments/</item>
+        <item>https://api.ipify.org?format=json/</item>
+        <item>https://randomuser.me/api/</item>
     </string-array>
 </resources>
